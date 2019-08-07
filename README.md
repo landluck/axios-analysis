@@ -6,46 +6,42 @@
 
 ### 系列计划
     
-    1. 分析 axios 的每一个 feature，并在这过程中，使用 typescript 重写 axios 库（不包含 Node 端实现）
-    2. 添加 微信小程序、支付宝小程序 adapter，并简化 axios 一些过于鸡肋的功能（例如 axios.all axios.spread）
-    3. 完整的测试用例覆盖，确保 新的 axios 库能够稳定的运行在生产环境
-    4. 将新的axios 库发布到 npm 上，供大家使用
+  1. 分析 `axios` 的每一个 `feature` ，并在这过程中，使用 `typescript` 重写 `axios` 库（不包含 `Node` 端实现）
+  2. 添加 微信小程序、支付宝小程序 `adapter，并简化` `axios` 一些过于鸡肋的功能（例如 `axios.all`` axios.spread`）
+  3. 完整的测试用例覆盖，确保 新的 `axios` 库能够稳定的运行在生产环境
+  4. 将新的 `axios` 库发布到 `npm` 上，供大家使用
 
 ###  axiox 介绍
 
 > Promise based HTTP client for the browser and node.js 
 
-    axios 是一个基于Promise 用于浏览器和 nodejs 的 HTTP 客户端，其主要也是对 XHR 基于 Promoise 
-    的封装，所以它不兼容 ie9 及以下，在 ie9 中我们需要引入 ployfill
+    `axios` 是一个基于 `Promise` 用于浏览器和 `nodejs` 的 `HTTP` 客户端，其主要也是对 `XHR` 基于 `Promoise` 
+    的封装，所以它不兼容 ie9 及以下，在 ie9 中我们需要引入 `ployfill`
 
-axios 主要的功能点有：
+`axios` 主要的功能点有：
 
-* 浏览器中创建 XMLHttpRequests
-* Node中创建 http 请求（暂不实现）
-* 支持 Promise
+* 浏览器中创建 `XMLHttpRequests`
+* `Node` 中创建 `http` 请求（暂不实现）
+* 支持 `Promise`
 * 支持拦截请求和响应
 * 转换请求数据和响应数据
 * 取消请求
-* 自动转换 JSON 数据
-* 客户端支持防御 XSRF
+* 自动转换 `JSON` 数据
+* 客户端支持防御 `XSRF`
 * ...
 
 ### 核心图示
 
-为了避免 brothers 说我标题党，我在这里就将个人对 axios 源码的理解的图片贴出来，后面
-大家可以看着这张图，去看我的代码，更能容易理解 axios 的原理和设计思想。
+为了避免 `brothers` 说我标题党，我在这里就将个人对 `axios` 源码的理解的图片贴出来，后面
+大家可以看着这张图，去看我的代码，更能容易理解 `axios` 的原理和设计思想。
 
-<p style="color: #e4393c">因为一张图片太大，所以这里分成多张，需要完整图片的 brothers， 可以私信联系我</p>
 
-![](https://user-gold-cdn.xitu.io/2019/8/6/16c66fd44edb34c4?w=2104&h=1432&f=png&s=191608)
-![](https://user-gold-cdn.xitu.io/2019/8/6/16c66fa776379a20?w=2840&h=1444&f=png&s=213453)
-![](https://user-gold-cdn.xitu.io/2019/8/6/16c66fb3a6424d89?w=2398&h=1540&f=jpeg&s=164822)
-![](https://user-gold-cdn.xitu.io/2019/8/6/16c66fb1243304ec?w=2444&h=1058&f=jpeg&s=158654)
+![](https://user-gold-cdn.xitu.io/2019/8/8/16c6cd04422d961c?w=2045&h=3602&f=png&s=219027)
 
 ### 搭建环境
 
-使用 typescript 来开发库，我们需要一个脚手架来帮我们做编译打包工作，我推荐大家使用 非常优秀的开源库 
- [typescript-library-starter](https://github.com/alexjoverm/typescript-library-starter) , 只需要简单的几步，我们就能搭建起一个非常完善的项目，不管是编译 ts 到 js，还是测试工具 [typescript-library-starter](https://github.com/alexjoverm/typescript-library-starter) 都已经为我们做好了，十分推荐使用 
+使用 `typescript` 来开发库，我们需要一个脚手架来帮我们做编译打包工作，我推荐大家使用 非常优秀的开源库 
+ [typescript-library-starter](https://github.com/alexjoverm/typescript-library-starter) , 只需要简单的几步，我们就能搭建起一个非常完善的项目，不管是编译 `ts` 到 `js` ，还是测试工具 [typescript-library-starter](https://github.com/alexjoverm/typescript-library-starter) 都已经为我们做好了，十分推荐使用 
  
  1. 开始使用
  
@@ -61,14 +57,15 @@ npm install
 
 2. 项目名
 
-在 npm install 时，脚手架会询问你项目名称，你只需要输入个人的项目名称，脚手架会自动更改项目内部的名称，帮我们把一切搞定
+在 `npm install` 时，脚手架会询问你项目名称，你只需要输入个人的项目名称，脚手架会自动更改项目内部的名称，帮我们把一切搞定
  
  
-当我们安装好依赖后，我们会得到一些代码和配置文件，国际惯例，src 就是我们要编写代码的文件夹，那么，就让我们一起愉快的 coding 吧
+当我们安装好依赖后，我们会得到一些代码和配置文件，国际惯例，`src` 就是我们要编写代码的文件夹，那么，就让我们一起愉快的 `coding` 吧
 
 ### 开发前准备
-在开发过程中，我们要不断的验证我们开发的结果，而不是一口气写完再回头去写测试用例，那么为了我们能够实时验证结果，我们就需要实时编译我们的代码，然后去测试，axios 源码是 js 所写，也不需要编译，但我们要将 ts 编译成 js，所以我们需要使用到配置中的 rollup 来做, 同时需要启动一个node进程，提供我们开发使用的接口,这里选择使用 express，并且用
-express-static 将我们的 examples 文件夹添加静态资源访问
+
+在开发过程中，我们要不断的验证我们开发的结果，而不是一口气写完再回头去写测试用例，那么为了我们能够实时验证结果，我们就需要实时编译我们的代码，然后去测试，`axios` 源码是 `js` 所写，也不需要编译，但我们要将 `ts` 编译成 `js`，所以我们需要使用到配置中的 `rollup` 来做, 同时需要启动一个node进程，提供我们开发使用的接口,这里选择使用 express，并且用
+`express-static` 将我们的 `examples` 文件夹添加静态资源访问
 
 1. 编写测试接口服务
 ```javascript
@@ -81,7 +78,7 @@ app.use(express.static(__dirname + '/examples'))
 app.listen(3000, () => console.log('dev server listening on port 3000!'));
 ```
 
-2. 将编译好的代码引入测试页面，我们需要在 rollup.config.js 中添加一段代码
+2. 将编译好的代码引入测试页面，我们需要在 `rollup.config.js` 中添加一段代码
 
 ```javascript
 // rollup.config.js
@@ -92,7 +89,7 @@ output: [
     { file: './examples/iny-request.js', name: camelCase(libraryName),  format: 'umd', sourcemap: true },
   ],
 ```
-3. 在启动 rollup 监听编译时，启动测试服务
+3. 在启动 `rollup` 监听编译时，启动测试服务
 
 ```javascript
 // rollup.config.js
@@ -100,7 +97,7 @@ if (process.env.NODE_ENV === 'development') {
   require('./server')
 }
 ```
-4. 安装 cross-env，修改 package.json 中 start 命令，设置环境变量
+4. 安装 `cross-env`，修改 `package.json` 中 `start` 命令，设置环境变量
 
 ```javascript
 // 终端
@@ -110,13 +107,13 @@ npm install cross-env --save-dev
 "start": "cross-env NODE_ENV=development rollup -c rollup.config.ts -w",
 ```
 
-到这里，我们的开发环境搭建完成，其实这里测试用例我们可以使用 webpack 或者 gulp 来做一些实时编译，直接引入我们开发中的代码进行测试，会对调试和soucemap支持的更好。但这不是这次的重点，所以这里就取巧是使用了 rollup 编译后的代码进行测试
+到这里，我们的开发环境搭建完成，其实这里测试用例我们可以使用 `webpack` 或者 `gulp` 来做一些实时编译，直接引入我们开发中的代码进行测试，会对调试和 `soucemap` 支持的更好。但这不是这次的重点，所以这里就取巧是使用了 `rollup` 编译后的代码进行测试
 
 ### 开始开发
 
 #### 实现简单的 xhr 请求
 
-作为整个系列开发的第一步，我们从最简单的 xhr 请求做起，现在我们开始开发一个可以发送请求的 xhr 函数
+作为整个系列开发的第一步，我们从最简单的 `xhr` 请求做起，现在我们开始开发一个可以发送请求的 `xhr` 函数
 
 ```typescript
 function xhr (options: any): Promise<any> {
@@ -137,9 +134,9 @@ function xhr (options: any): Promise<any> {
 }
 ```
 
-axios 是基于原生 Promise 开发的，所以我们这里直接使用原生 Promise，我们的 xhr 函数需要返回一个 Pormise对象，我们直接 new Promise 返回，至于 xhr的内容，相信大家都懂，不太熟悉的可以去 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open)去了解一下，然后，大家可以思考一下，一个最简单的请求，会有那些最基本的参数，比如 url、method、data 这些,所以我们就可以简单的写出我们的 xhr 函数了.
+`axios` 是基于原生 `Promise` 开发的，所以我们这里直接使用原生 `Promise` ，我们的 `xhr` 函数需要返回一个 `Pormise` 对象，我们直接 `new Promise` 返回，至于 `xhr` 的内容，相信大家都懂，不太熟悉的可以去 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open)去了解一下，然后，大家可以思考一下，一个最简单的请求，会有那些最基本的参数，比如 `url、method、data` 这些,所以我们就可以简单的写出我们的 `xhr` 函数了.
 
-这里，我们可以大概的定义出我们发起请求需要的参数类型了，因为是使用 typescript 开发，所以我们后面会定义大量的类型，现在我们定义出我们的第一个类型吧
+这里，我们可以大概的定义出我们发起请求需要的参数类型了，因为是使用 `typescript` 开发，所以我们后面会定义大量的类型，现在我们定义出我们的第一个类型吧
 
 
 ```typescript
@@ -155,7 +152,7 @@ interface AxiosRequestConfig {
 
 ```
 
-然后在我们的项目中使用这个类型，同时使用我们刚刚所写的 xhr 函数
+然后在我们的项目中使用这个类型，同时使用我们刚刚所写的 `xhr` 函数
 
 ```typescript
 // iny-request.js
@@ -236,13 +233,13 @@ router.get('/base/test', function (req, res) {
 
 ![](https://user-gold-cdn.xitu.io/2019/8/7/16c67b1635b1521c?w=1526&h=1064&f=jpeg&s=216508)
 
-这里请求成功，但是 params 和 data 没有添加到 url 和 body 中，那么接下来，我们来处理 params 和 data
+这里请求成功，但是 `params` 和 `data` 没有添加到 `url` 和 `body` 中，那么接下来，我们来处理 `params` 和 `data`
 
 #### url 以及 params 的处理
 
-1、url 和 params 处理
+1、`url` 和 `params` 处理
 
-我们新建 helpers 文件夹，专门来放置我们的工具函数，新建 buildURL.ts 文件，来专门处理 url
+我们新建 `helpers` 文件夹，专门来放置我们的工具函数，新建 `buildURL.ts` 文件，来专门处理 `url`
 
 
 ```typescript
@@ -260,6 +257,9 @@ function encode(value: string): string {
     .replace(/%5D/gi, ']')
 }
 
+```
+这里 `typescript` 代码太多的话，好像不高亮显示，不知道是我的写法问题，还是掘金这里的限制，所以这里暂时改成 `javascript` 吧
+```javascript
 export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string) {
   // 没有参数，直接返回 url
   if (!params) return url
@@ -331,7 +331,7 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
 
 ```
 
-大家在上面看到了，我们 有个工具函数，是用来判断是否是 URLSearchParams, Date, Object 类型的数据，所以我们在 helpers 下面新建 utils.ts 来放置我们的一些工具函数，然后来写我们判断这些类型数据的函数
+大家在上面看到了，我们 有个工具函数，是用来判断是否是 `URLSearchParams`, `Date`, `Object` 类型的数据，所以我们在 `helpers` 下面新建 `utils.ts` 来放置我们的一些工具函数，然后来写我们判断这些类型数据的函数
 
 ```typescript
 /*
@@ -360,7 +360,7 @@ export function isPlainObject(value: any): value is Object {
 }
 ```
 
-这里，我们将 buildURL 函数已经写好来，我们把它用到我们的xhr函数中
+这里，我们将 `buildURL` 函数已经写好来，我们把它用到我们的 `xhr` 函数中
 
 ```typescript
 import { AxiosRequestConfig } from './types'
@@ -387,7 +387,7 @@ export default function xhr(options: AxiosRequestConfig): Promise<any> {
 ```
 #### 测试 buildURL 函数
 
-我们已经将 buildURL 函数写好了，我们需要来测试一下
+我们已经将 `buildURL` 函数写好了，我们需要来测试一下
 
 ```html
 <script>
@@ -421,21 +421,22 @@ export default function xhr(options: AxiosRequestConfig): Promise<any> {
 
 ![](https://user-gold-cdn.xitu.io/2019/8/7/16c6ca057e612ece?w=1908&h=494&f=jpeg&s=101720)
 
-从这张测试结果的图片来看，我们的 buildURL 目前来说，没有问题，但更详细的测试，我们后面使用测试框架来测试，那么关于 url 和 params 的处理，我们就先到这里了
+从这张测试结果的图片来看，我们的 `buildURL` 目前来说，没有问题，但更详细的测试，我们后面使用测试框架来测试，那么关于 `url` 和 `params` 的处理，我们就先到这里了
 
 #### 总结
 
-关于 axios 重构计划，第一步就先到这里了，再往下写篇幅过长，就会太长不看了，所以我们就先写到这里，周末会更新第二篇，第二篇的主要内容以下两个点
+关于 `axios` 重构计划，第一步就先到这里了，再往下写篇幅过长，就会太长不看了，所以我们就先写到这里，周末会更新第二篇，第二篇的主要内容以下两个点
 
-* axios 请求 data 的处理 
-* axios 请求 header 的处理
+* `axios` 请求 `data` 的处理 
+* `axios` 请求 `header` 的处理
 
-axios 重构系列，是我最近想在小程序中使用 axios 的功能，却发现没有很好的选择，因此而萌生的一个想法。但直接去从 axios 源码上改，除了满足业务需求，收益不大，所以，当我看了好几遍 axios 的源码后，决定使用 ts 从零自己去写一个这样的系列，并扩展微信小程序和支付宝小程序相关的内容，如果大家在阅读过程中中发现了不合理或者可以优化的点，欢迎大家直接在评论区直接提出 或者联系我
+`axios` 重构系列，是我最近想在小程序中使用 `axios` 的功能，却发现没有很好的选择，因此而萌生的一个想法。但直接去从 `axios` 源码上改，除了满足业务需求，收益不大，所以，当我看了好几遍 `axios` 的源码后，决定使用 ts 从零自己去写一个这样的系列，并扩展微信小程序和支付宝小程序相关的内容，如果大家在阅读过程中中发现了不合理或者可以优化的点，欢迎大家直接在评论区直接提出 或者联系我
 
-最后，如果 axios 重构计划 给你提供了帮助或者让你有任何收获，请给 作者 点个赞，感谢大家 [点赞](https://github.com/landluck/iny-request)
+最后，如果 `axios` 重构计划 给你提供了帮助或者让你有任何收获，请给 作者 点个赞，感谢大家 [点赞](https://github.com/landluck/iny-request)
 
 以下为快速传送门
 
 [重构计划文档地址](https://github.com/landluck/axios-analysis)
 [重构计划源码地址](https://github.com/landluck/iny-request)
 
+ 
