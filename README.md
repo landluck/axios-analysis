@@ -74,11 +74,9 @@ express-static 将我们的 examples 文件夹添加静态资源访问
 ```javascript
 // 项目根目录下新建 server.js
 const express = require('express');
-const serve   = require('express-static')
-
 const app = express();
-app.use(serve(__dirname + '/examples'));
 
+app.use(express.static(__dirname + '/examples'))
 
 app.listen(3000, () => console.log('dev server listening on port 3000!'));
 ```
@@ -238,4 +236,121 @@ router.get('/base/test', function (req, res) {
 
 ![](https://user-gold-cdn.xitu.io/2019/8/7/16c67b1635b1521c?w=1526&h=1064&f=jpeg&s=216508)
 
-请求成功，但是 params 和 data 没有添加到 url 和 body 中，那么接下来，我们来处理 params...
+这里请求成功，但是 params 和 data 没有添加到 url 和 body 中，那么接下来，我们来处理 params 
+
+#### url、params、data 的处理
+
+1、url 和 params 处理
+
+我们新建 helpers 文件夹，专门来放置我们的工具函数，新建 buildURL.ts 文件，来专门处理 url
+
+```typescript
+  export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string) {
+  // 没有参数，直接返回 url
+  if (!params) return url
+
+  let resultURL: string = ''
+
+  // axios 这里直接每一个请求直接传入一个 paramsSerializer 函数，用来格式化参数的
+  // 所以这里我们先判断是否存在这个函数，有的话直接调用即可
+  if (paramsSerializer) {
+
+    resultURL = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    // params 也有可能传入一个URLSearchParams 类型的数据，如果是，我们直接 toString 即可
+    resultURL = params.toString()
+  } else {
+    // 这里就需要对普通对象、数组来进行处理了
+    const part: string[] = []
+  
+
+    Object.keys(params).forEach(key => {
+      let value = params[key]
+  
+      // 过滤掉 null 和 undefined
+      if (value === null || typeof value === 'undefined') {
+        return
+      }
+  
+      // 判断是否是数组, 数组需要将参数格式化为 'a[]=1&a[]=3&a[]=4' 这种
+      if (Array.isArray(value)) {
+        key += '[]'
+      } else {
+  
+        // 这里将不是 数组的 数组转换为数组，方便后面循环处理
+        value = [value]
+      }
+  
+      // 循环将 k v 处理成 ['a=1','b=2']，并放置于 part 容器中
+      value.forEach((val: any) => {
+  
+        // 这里是 axios 会讲 k 和 v 通过 url 编码，并且将一些特殊字符编译回来
+        part.push(`${encode(key)}=${val}`)
+      })
+    })
+  
+    // 将 ['a=1','b=2'] 处理成 'a=1&b=2' 格式
+    resultURL = part.join('&')
+  }
+
+
+  if (resultURL) {
+    // 针对带有 # 哈希的 url 进行处理
+    const index = url.indexOf('#')
+    if (index !== -1) {
+      url = url.slice(0, index)
+    }
+
+    url += (url.indexOf('?') === -1 ? '?' : '&') + resultURL
+  }
+  
+  return url
+}
+```
+
+大家在上面看到了，我们 有个工具函数，是用来判断是否是 URLSearchParams 类型的数据，所以我们在 helpers 下面新建 utils.ts 来放置我们的一些工具函数，然后来写我们判断 URLSearchParams 类型数据的函数
+
+```typescript
+/*
+  *  在 ts 中，我们如何来写一个判断类型的函数呢
+  *  有两种方法，第一个种是返回一个 boolean 类型，告诉我们 true 或者 false
+  *  第二个就是这种 value is 类型 的写法
+  *  更为推荐第二种
+*/
+
+
+export function isURLSearchParams (value: any): value is URLSearchParams {
+
+  // 我们这里使用 instanceof 来判断 URLSearchParams 的类型
+  return typeof value !== 'undefined' && value instanceof URLSearchParams
+}
+```
+
+这里，我们将 buildURL 函数已经写好来，我们把它用到我们的xhr函数中
+
+```typescript
+import { AxiosRequestConfig } from './types'
+import { buildURL } from './helpers/buildUrl';
+
+export default function xhr(options: AxiosRequestConfig): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const { url, method, data, params } = options
+
+    const request = new XMLHttpRequest()
+
+    // 这里使用我们的buildURL
+    // 大家可能注意到我们这里的 method 后面，添加了一个 ! ,那是因为在我们的
+    // AxioxRequestConfig 中，method 不是必须的参数，但这里是必须有的，所以我们在这里断言
+    // method 肯定不为空，在 ts 中可以在一个值后面，使用 !来断言一个值不为空
+
+    request.open(method!, buildURL(url, params), true)
+
+    request.send(data)
+  })
+}
+```
+#### 测试 buildURL 函数
+
+我们已经将 buildURL 函数写好了，我们需要来测试一下
+
+
