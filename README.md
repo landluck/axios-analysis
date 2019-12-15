@@ -426,13 +426,6 @@ export default function xhr(options: AxiosRequestConfig): Promise<any> {
 * `axios` 请求 `data` 的处理 
 * `axios` 请求 `header` 的处理
 
-`axios` 重构系列，是我最近想在小程序中使用 `axios` 的功能，却发现没有很好的选择，因此而萌生的一个想法。但直接去从 `axios` 源码上改，除了满足业务需求，收益不大，所以，当我看了好几遍 `axios` 的源码后，决定使用 ts 从零自己去写一个这样的系列，并扩展微信小程序和支付宝小程序相关的内容，如果大家在阅读过程中中发现了不合理或者可以优化的点，欢迎大家直接在评论区直接提出 或者联系我
-
-最后，如果 `axios` 重构计划 给你提供了帮助或者让你有任何收获，请给 作者 点个赞，感谢大家 [点赞](https://github.com/landluck/iny-request)
-
-以下为快速传送门
-
-[重构计划文档地址](https://github.com/landluck/axios-analysis)
-[重构计划源码地址](https://github.com/landluck/iny-request)
+`axios` 重构系列，是我最近想在小程序中使用 `axios` 的功能，却发现没有很好的选择，因此而萌生的一个想法。但直接去从 `axios` 源码上改，除了满足业务需求，收益不大，所以，当我看了好几遍 `axios` 的源码后，决定使用 ts 从零自己去写一个这样的系列，并扩展微信小程序和支付宝小程序相关的内容
 
  
