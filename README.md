@@ -9,7 +9,6 @@
   1. 分析 `axios` 的每一个 `feature` ，并在这过程中，使用 `typescript` 重写 `axios` 库（不包含 `Node` 端实现）
   2. 添加 微信小程序、支付宝小程序 `adapter，并简化` `axios` 一些过于鸡肋的功能（例如 `axios.all`` axios.spread`）
   3. 完整的测试用例覆盖，确保 新的 `axios` 库能够稳定的运行在生产环境
-  4. 将新的 `axios` 库发布到 `npm` 上，供大家使用
 
 ###  axiox 介绍
 
@@ -31,9 +30,6 @@
 * ...
 
 ### 核心图示
-
-为了避免 `brothers` 说我标题党，我在这里就将个人对 `axios` 源码的理解的图片贴出来，后面
-大家可以看着这张图，去看我的代码，更能容易理解 `axios` 的原理和设计思想。
 
 
 ![](https://user-gold-cdn.xitu.io/2019/8/8/16c6cd04422d961c?w=2045&h=3602&f=png&s=219027)
